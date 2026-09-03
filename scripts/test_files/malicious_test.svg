@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200">
+  <title>Malicious SVG Test</title>
+  
+  <!-- Malicious script that should be stripped -->
+  <script type="text/javascript">
+    alert('unsafe');
+    document.cookie = 'stolen';
+  </script>
+  
+  <!-- Malicious event handlers -->
+  <rect x="10" y="10" width="100" height="50" fill="red" onclick="alert('click')" onload="alert('load')"/>
+  
+  <!-- Malicious foreignObject -->
+  <foreignObject width="200" height="100">
+    <body xmlns="http://www.w3.org/1999/xhtml">
+      <script>alert('xss')</script>
+      <p>Foreign content</p>
+    </body>
+  </foreignObject>
+  
+  <!-- JavaScript URL -->
+  <a xlink:href="javascript:alert('xss')">
+    <text x="50" y="100" fill="black">Click me safely</text>
+  </a>
+  
+  <!-- Legitimate text that SHOULD be extracted -->
+  <text x="200" y="50" fill="black" font-size="16">Safe Department Name</text>
+  <text x="200" y="80" fill="black" font-size="12">
+    <tspan x="200" dy="0">Safe Employee Info</tspan>
+  </text>
+</svg>

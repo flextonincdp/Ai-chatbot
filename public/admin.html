@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Knowledge Studio — Admin</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="brandmark">
+      <div class="mark">KS</div>
+      <div class="name">Knowledge Studio</div>
+    </div>
+    <div class="who">
+      <span class="role-pill">Admin</span>
+      <a class="logout-link" id="logoutBtn">Log out</a>
+    </div>
+  </header>
+
+  <!-- Dashboard Stats -->
+  <div class="stats-grid stats-grid-2" id="statsGrid">
+    <div class="stat-card">
+      <div class="stat-label">Total Documents</div>
+      <div class="stat-value" id="statDocs">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Ready Documents</div>
+      <div class="stat-value" id="statReady">0</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="upload-section">
+      <h3>Upload knowledge files</h3>
+      <p class="upload-hint" id="uploadHint">Loading supported formats...</p>
+
+      <div class="dropzone" id="dropzone">
+        <div class="dropzone-icon">📁</div>
+        <div class="dropzone-title">Drag and drop files here</div>
+        <div class="dropzone-sub">or click to browse</div>
+        <div class="dropzone-formats" id="formatList"></div>
+      </div>
+      <input type="file" id="fileInput" multiple>
+
+      <div class="file-list" id="fileList"></div>
+
+      <div class="upload-actions">
+        <button class="primary" id="processBtn" style="display:none;">Upload & Process</button>
+        <button class="ghost" id="clearBtn" style="display:none;">Clear list</button>
+      </div>
+
+      <div class="upload-log" id="uploadLog"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Document Management</h2>
+    <p class="hint">All documents currently indexed in the knowledge base.</p>
+    
+    <!-- Table view (Desktop) -->
+    <div class="doc-table-wrap" id="docTableWrap">
+      <table class="doc-table">
+        <thead>
+          <tr>
+            <th>Document</th>
+            <th>Type</th>
+            <th>Size</th>
+            <th>Pages / Slides / Chunks</th>
+            <th>Status</th>
+            <th>Uploaded</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="docTableBody"></tbody>
+      </table>
+    </div>
+
+    <!-- Cards view (Mobile fallback) -->
+    <div class="doc-cards" id="docCardsBody"></div>
+
+    <div class="empty" id="docEmptyState" style="display:none;">
+      Nothing here yet — upload files above to build the knowledge base.
+    </div>
+  </div>
+</div>
+<script src="js/admin.js"></script>
+</body>
+</html>

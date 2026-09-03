@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Knowledge Studio — Sign in</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="auth-page">
+  <div class="auth-form-card">
+    <div class="auth-brand">
+      <div class="mark">KS</div>
+      <div class="brand-name">Knowledge Studio</div>
+      <div class="brand-desc">Organization knowledge base and AI assistant</div>
+    </div>
+
+    <h2>Sign in</h2>
+    <p class="hint">Choose how you're accessing Knowledge Studio.</p>
+
+    <div class="roleToggle">
+      <button id="btnRoleUser" class="active" type="button">Employee</button>
+      <button id="btnRoleAdmin" type="button">Admin</button>
+    </div>
+
+    <form id="formUser" class="loginForm active">
+      <label for="userCode">Team access code</label>
+      <input type="password" id="userCode" placeholder="Enter your access code" autocomplete="off" required>
+      <button class="primary" type="submit" id="btnUserSubmit">Enter chat</button>
+      <div class="login-error" id="userError"></div>
+    </form>
+
+    <form id="formAdmin" class="loginForm">
+      <label for="adminUser">Username</label>
+      <input type="text" id="adminUser" placeholder="admin" autocomplete="off" required>
+      <label for="adminPass">Password</label>
+      <input type="password" id="adminPass" placeholder="••••••••" autocomplete="off" required>
+      <button class="primary" type="submit" id="btnAdminSubmit">Sign in to dashboard</button>
+      <div class="login-error" id="adminError"></div>
+    </form>
+  </div>
+</div>
+<script src="js/login.js"></script>
+</body>
+</html>

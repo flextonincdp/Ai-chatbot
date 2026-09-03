@@ -1,0 +1,8 @@
+(node:27008) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[Chat] LLM content generation failed, using structured fallback: Generated answer failed grounding validation
+[Chat] LLM content generation failed, using structured fallback: Generated answer failed grounding validation
+Failed to generate SVG via LLM, attempting deterministic fallback: SVG LLM response unavailable
+[Chat] LLM content generation failed, using structured fallback: Generated answer failed grounding validation
+[Chat] LLM content generation failed, using structured fallback: Generated answer failed grounding validation
+Failed to generate SVG via LLM, attempting deterministic fallback: SVG LLM response unavailable

@@ -1,0 +1,76 @@
+[DB] PostgreSQL pool initialized (min=2, max=20).
+Knowledge Studio running at http://localhost:3000
+Groq primary model: openai/gpt-oss-20b
+Groq fallback models: openai/gpt-oss-20b
+Embedding provider: local (Xenova/all-MiniLM-L6-v2)
+[JobQueue] Initialized PostgreSQL queue table.
+[Worker] Starting document processor loop (concurrency: 2)...
+[LLM] model=openai/gpt-oss-20b estimatedInputTokens=1047 maxOutputTokens=300 attempt=1/2
+[LLM] Usage: promptTokens=971 completionTokens=300 totalTokens=1271
+[PIPELINE] Explicit artifact delivery request preserved: PDF.
+[PIPELINE] mode=NEW_RAG RAG_CALL_COUNT=1
+[RAG] retrievalQuery="Explain main business flow in Case studies and professional ."
+[Embeddings] Loading local model: Xenova/all-MiniLM-L6-v2 ...
+[Embeddings] Model loaded in 0.6s. Dimensions: 384
+[RAG] candidates=27 candidateChunkIds=doc_mtit6twl_8fc8dc45_v1_chunk_1061,doc_mtit6twl_8fc8dc45_2480,doc_mtit6twl_8fc8dc45_v1_chunk_1841,doc_mtjlprf9_4c001b8a_16,doc_mtjllf07_7455ef48_v1_chunk_17,doc_mtit6twl_8fc8dc45_626,doc_mtit6t3w_7276e219_v1_chunk_777,doc_mtit6twl_8fc8dc45_96,doc_mtit6t3w_7276e219_v1_chunk_620,doc_mtit6twl_8fc8dc45_779,doc_mtjllf07_7455ef48_v1_chunk_15,doc_mtjknjw8_9a8496f5_40,doc_mtit6twl_8fc8dc45_v1_chunk_1209,doc_mtjm0ac3_c31c4811_0,doc_mtit6t3w_7276e219_v1_chunk_374,doc_mtjm0ac3_c31c4811_1,doc_mtit6twl_8fc8dc45_v1_chunk_1049,doc_mti2fzwu_afe86c69_226,doc_mtit6twl_8fc8dc45_v1_chunk_1057,doc_mti2fzwu_afe86c69_232,doc_mtit6twl_8fc8dc45_v1_chunk_1844,doc_mtiispqv_31ebe468_0,doc_mtit6twl_8fc8dc45_v1_chunk_704,doc_mtiispqv_31ebe468_1,doc_mtit6twl_8fc8dc45_v1_chunk_1839,doc_mtiispqv_31ebe468_2,doc_mtjmymwd_3866e7ad_0 candidateDocumentIds=doc_mtit6twl_8fc8dc45,doc_mtjlprf9_4c001b8a,doc_mtjllf07_7455ef48,doc_mtit6t3w_7276e219,doc_mtjknjw8_9a8496f5,doc_mtjm0ac3_c31c4811,doc_mti2fzwu_afe86c69,doc_mtiispqv_31ebe468,doc_mtjmymwd_3866e7ad
+[RAG] finalEvidence=1 rejectedCandidates=26 selectedChunkIds=doc_mtiispqv_31ebe468_0 selectedDocumentIds=doc_mtiispqv_31ebe468 relevanceScores=0.302
+[RAG] Using 1 chunks, ~240 estimated tokens
+[LLM] model=openai/gpt-oss-20b estimatedInputTokens=918 maxOutputTokens=800 attempt=1/2
+[LLM] Usage: promptTokens=815 completionTokens=800 totalTokens=1615
+[LLM] model=openai/gpt-oss-20b estimatedInputTokens=1039 maxOutputTokens=300 attempt=1/2
+[LLM] Usage: promptTokens=965 completionTokens=300 totalTokens=1265
+[PIPELINE] mode=NEW_RAG RAG_CALL_COUNT=1
+[RAG] candidates=27 candidateChunkIds=doc_mtit6twl_8fc8dc45_v1_chunk_1061,doc_mtjlprf9_4c001b8a_16,doc_mtit6t3w_7276e219_v1_chunk_374,doc_mtit6twl_8fc8dc45_626,doc_mtit6twl_8fc8dc45_v1_chunk_1209,doc_mtit6twl_8fc8dc45_96,doc_mtit6twl_8fc8dc45_v1_chunk_1057,doc_mtit6twl_8fc8dc45_779,doc_mtit6twl_8fc8dc45_v1_chunk_704,doc_mtit6twl_8fc8dc45_2480,doc_mtjllf07_7455ef48_v1_chunk_15,doc_mtjknjw8_9a8496f5_40,doc_mtit6twl_8fc8dc45_v1_chunk_1841,doc_mtjm0ac3_c31c4811_0,doc_mtit6twl_8fc8dc45_v1_chunk_1049,doc_mtjm0ac3_c31c4811_1,doc_mtit6t3w_7276e219_v1_chunk_415,doc_mti2fzwu_afe86c69_226,doc_mtit6t3w_7276e219_v1_chunk_380,doc_mti2fzwu_afe86c69_232,doc_mtjllf07_7455ef48_v1_chunk_17,doc_mtiispqv_31ebe468_0,doc_mtit6twl_8fc8dc45_v1_chunk_710,doc_mtiispqv_31ebe468_1,doc_mtjllf07_7455ef48_v1_chunk_2,doc_mtiispqv_31ebe468_2,doc_mtjmymwd_3866e7ad_0 candidateDocumentIds=doc_mtit6twl_8fc8dc45,doc_mtjlprf9_4c001b8a,doc_mtit6t3w_7276e219,doc_mtjllf07_7455ef48,doc_mtjknjw8_9a8496f5,doc_mtjm0ac3_c31c4811,doc_mti2fzwu_afe86c69,doc_mtiispqv_31ebe468,doc_mtjmymwd_3866e7ad
+[RAG] finalEvidence=1 rejectedCandidates=26 selectedChunkIds=doc_mtiispqv_31ebe468_0 selectedDocumentIds=doc_mtiispqv_31ebe468 relevanceScores=0.332
+[RAG] Using 1 chunks, ~240 estimated tokens
+[LLM] model=openai/gpt-oss-20b estimatedInputTokens=910 maxOutputTokens=800 attempt=1/2
+[LLM] Usage: promptTokens=809 completionTokens=694 totalTokens=1503
+[PIPELINE] Explicit current-answer artifact request: reusing the latest grounded answer.
+[PIPELINE] Resolved context to messageId=e9058a12-a53b-41db-8756-a6a189912e3a
+[PIPELINE] mode=CONTEXT_REF RAG_CALL_COUNT=0 LLM_CALL_COUNT=1
+[PIPELINE] Explicit current-answer artifact request: reusing the latest grounded answer.
+[PIPELINE] Resolved context to messageId=4349027d-6444-4397-a9c7-acb1cfbce368
+[PIPELINE] mode=CONTEXT_REF RAG_CALL_COUNT=0 LLM_CALL_COUNT=1
+[LLM] model=openai/gpt-oss-20b estimatedInputTokens=1039 maxOutputTokens=300 attempt=1/2
+[LLM] Usage: promptTokens=965 completionTokens=300 totalTokens=1265
+[PIPELINE] mode=NEW_RAG RAG_CALL_COUNT=1
+[RAG] candidates=27 candidateChunkIds=doc_mtit6twl_8fc8dc45_v1_chunk_1061,doc_mtjlprf9_4c001b8a_16,doc_mtit6t3w_7276e219_v1_chunk_374,doc_mtit6twl_8fc8dc45_626,doc_mtit6twl_8fc8dc45_v1_chunk_1209,doc_mtit6twl_8fc8dc45_96,doc_mtit6twl_8fc8dc45_v1_chunk_1057,doc_mtit6twl_8fc8dc45_779,doc_mtit6twl_8fc8dc45_v1_chunk_704,doc_mtit6twl_8fc8dc45_2480,doc_mtjllf07_7455ef48_v1_chunk_15,doc_mtjknjw8_9a8496f5_40,doc_mtit6twl_8fc8dc45_v1_chunk_1841,doc_mtjm0ac3_c31c4811_0,doc_mtit6twl_8fc8dc45_v1_chunk_1049,doc_mtjm0ac3_c31c4811_1,doc_mtit6t3w_7276e219_v1_chunk_415,doc_mti2fzwu_afe86c69_226,doc_mtit6t3w_7276e219_v1_chunk_380,doc_mti2fzwu_afe86c69_232,doc_mtjllf07_7455ef48_v1_chunk_17,doc_mtiispqv_31ebe468_0,doc_mtit6twl_8fc8dc45_v1_chunk_710,doc_mtiispqv_31ebe468_1,doc_mtjllf07_7455ef48_v1_chunk_2,doc_mtiispqv_31ebe468_2,doc_mtjmymwd_3866e7ad_0 candidateDocumentIds=doc_mtit6twl_8fc8dc45,doc_mtjlprf9_4c001b8a,doc_mtit6t3w_7276e219,doc_mtjllf07_7455ef48,doc_mtjknjw8_9a8496f5,doc_mtjm0ac3_c31c4811,doc_mti2fzwu_afe86c69,doc_mtiispqv_31ebe468,doc_mtjmymwd_3866e7ad
+[RAG] finalEvidence=1 rejectedCandidates=26 selectedChunkIds=doc_mtiispqv_31ebe468_0 selectedDocumentIds=doc_mtiispqv_31ebe468 relevanceScores=0.332
+[RAG] Using 1 chunks, ~240 estimated tokens
+[LLM] model=openai/gpt-oss-20b estimatedInputTokens=910 maxOutputTokens=800 attempt=1/2
+[LLM] Usage: promptTokens=809 completionTokens=677 totalTokens=1486
+[PIPELINE] Explicit current-answer artifact request: reusing the latest grounded answer.
+[PIPELINE] Resolved context to messageId=7f858f6f-b0f5-4dbf-8235-d1b99367f6ec
+[PIPELINE] mode=CONTEXT_REF RAG_CALL_COUNT=0 LLM_CALL_COUNT=1
+[LLM] model=openai/gpt-oss-20b estimatedInputTokens=642 maxOutputTokens=800 attempt=1/2
+[LLM] Usage: promptTokens=598 completionTokens=800 totalTokens=1398
+[LLM] model=openai/gpt-oss-20b estimatedInputTokens=1037 maxOutputTokens=300 attempt=1/2
+[LLM] Usage: promptTokens=965 completionTokens=300 totalTokens=1265
+[PIPELINE] mode=NEW_RAG RAG_CALL_COUNT=1
+[RAG] candidates=27 candidateChunkIds=doc_mtit6twl_8fc8dc45_v1_chunk_2452,doc_mtiispqv_31ebe468_0,doc_mtit6twl_8fc8dc45_v1_chunk_2113,doc_mtit6twl_8fc8dc45_845,doc_mtit6twl_8fc8dc45_v1_chunk_456,doc_mtjlprf9_4c001b8a_16,doc_mtit6twl_8fc8dc45_v1_chunk_1825,doc_mtit6twl_8fc8dc45_844,doc_mtit6twl_8fc8dc45_v1_chunk_2451,doc_mtjknjw8_9a8496f5_40,doc_mtit6twl_8fc8dc45_v1_chunk_1263,doc_mti2fzwu_afe86c69_226,doc_mtit6twl_8fc8dc45_v1_chunk_1146,doc_mti2fzwu_afe86c69_232,doc_mtit6twl_8fc8dc45_v1_chunk_2450,doc_mtit6t3w_7276e219_628,doc_mtit6twl_8fc8dc45_v1_chunk_2069,doc_mtit6t3w_7276e219_791,doc_mtit6twl_8fc8dc45_v1_chunk_1171,doc_mtjlxlcs_4d08ee89_0,doc_mtit6twl_8fc8dc45_v1_chunk_1174,doc_mti2fzwu_afe86c69_97,doc_mtit6twl_8fc8dc45_v1_chunk_2115,doc_mtiispqv_31ebe468_1,doc_mtit6twl_8fc8dc45_v1_chunk_1231,doc_mtiispqv_31ebe468_2,doc_mtjmymwd_3866e7ad_0 candidateDocumentIds=doc_mtit6twl_8fc8dc45,doc_mtiispqv_31ebe468,doc_mtjlprf9_4c001b8a,doc_mtjknjw8_9a8496f5,doc_mti2fzwu_afe86c69,doc_mtit6t3w_7276e219,doc_mtjlxlcs_4d08ee89,doc_mtjmymwd_3866e7ad
+[RAG] finalEvidence=1 rejectedCandidates=26 selectedChunkIds=doc_mtiispqv_31ebe468_0 selectedDocumentIds=doc_mtiispqv_31ebe468 relevanceScores=0.473
+[RAG] Using 1 chunks, ~240 estimated tokens
+[LLM] model=openai/gpt-oss-20b estimatedInputTokens=907 maxOutputTokens=800 attempt=1/2
+[LLM] Usage: promptTokens=807 completionTokens=800 totalTokens=1607
+[LLM] model=openai/gpt-oss-20b estimatedInputTokens=1172 maxOutputTokens=300 attempt=1/2
+[LLM] Usage: promptTokens=1098 completionTokens=300 totalTokens=1398
+[PIPELINE] Explicit artifact delivery request preserved: PDF.
+[PIPELINE] mode=NEW_RAG RAG_CALL_COUNT=1
+[RAG] retrievalQuery="based on information i want to"
+[RAG] candidates=25 candidateChunkIds=doc_mtit6twl_8fc8dc45_v1_chunk_89,doc_mtjknjw8_9a8496f5_327,doc_mtit6twl_8fc8dc45_v1_chunk_70,doc_mtit6twl_8fc8dc45_921,doc_mtit6twl_8fc8dc45_v1_chunk_68,doc_mtjlpret_775375ca_94,doc_mtit6twl_8fc8dc45_v1_chunk_90,doc_mti2fzwu_afe86c69_139,doc_mtit6twl_8fc8dc45_v1_chunk_91,doc_mti2fzwu_afe86c69_335,doc_mtit6t3w_7276e219_v1_chunk_340,doc_mtifmma4_f5b942f1_3,doc_mtit6tbj_fa44d6d1_v1_chunk_121,doc_mtifmma4_f5b942f1_10,doc_mtit6ubu_0f610cf2_v1_chunk_57,doc_mtifmma4_f5b942f1_17,doc_mtit6twl_8fc8dc45_v1_chunk_87,doc_mtifmma4_f5b942f1_50,doc_mtit6twl_8fc8dc45_v1_chunk_1626,doc_mtifmma4_f5b942f1_57,doc_mtit6twl_8fc8dc45_v1_chunk_56,doc_mtifmma4_f5b942f1_64,doc_mtit6twl_8fc8dc45_v1_chunk_79,doc_mtifmma4_f5b942f1_71,doc_mtit6tbj_fa44d6d1_v1_chunk_2 candidateDocumentIds=doc_mtit6twl_8fc8dc45,doc_mtjknjw8_9a8496f5,doc_mtjlpret_775375ca,doc_mti2fzwu_afe86c69,doc_mtit6t3w_7276e219,doc_mtifmma4_f5b942f1,doc_mtit6tbj_fa44d6d1,doc_mtit6ubu_0f610cf2
+[RAG] finalEvidence=8 rejectedCandidates=17 selectedChunkIds=doc_mtit6twl_8fc8dc45_v1_chunk_89,doc_mtit6twl_8fc8dc45_v1_chunk_70,doc_mtit6twl_8fc8dc45_v1_chunk_68,doc_mtit6twl_8fc8dc45_v1_chunk_90,doc_mtit6twl_8fc8dc45_v1_chunk_91,doc_mtit6t3w_7276e219_v1_chunk_340,doc_mtit6tbj_fa44d6d1_v1_chunk_121,doc_mtit6ubu_0f610cf2_v1_chunk_57 selectedDocumentIds=doc_mtit6twl_8fc8dc45,doc_mtit6t3w_7276e219,doc_mtit6tbj_fa44d6d1,doc_mtit6ubu_0f610cf2 relevanceScores=0.353,0.344,0.339,0.335,0.322,0.319,0.315,0.304
+[RAG] Using 8 chunks, ~1898 estimated tokens
+[LLM] model=openai/gpt-oss-20b estimatedInputTokens=2555 maxOutputTokens=800 attempt=1/2
+[LLM] Usage: promptTokens=2204 completionTokens=223 totalTokens=2427
+[LLM] model=openai/gpt-oss-20b estimatedInputTokens=1396 maxOutputTokens=300 attempt=1/2
+[LLM] Usage: promptTokens=1450 completionTokens=300 totalTokens=1750
+[PIPELINE] Explicit artifact delivery request preserved: SVG.
+[PIPELINE] mode=NEW_RAG RAG_CALL_COUNT=1
+[RAG] retrievalQuery="based on information flow"
+[RAG] candidates=25 candidateChunkIds=doc_mtit6twl_8fc8dc45_v1_chunk_523,doc_mtit6twl_8fc8dc45_779,doc_mtit6twl_8fc8dc45_v1_chunk_2311,doc_mtit6twl_8fc8dc45_744,doc_mtit6t3w_7276e219_v1_chunk_151,doc_mtjknjw8_9a8496f5_327,doc_mtit6twl_8fc8dc45_v1_chunk_524,doc_mtit6twl_8fc8dc45_221,doc_mtjmq0n3_ad374f3c_v1_chunk_167,doc_mtit6twl_8fc8dc45_439,doc_mtit6twl_8fc8dc45_v1_chunk_1733,doc_mtit6twl_8fc8dc45_440,doc_mtit6t3w_7276e219_v1_chunk_631,doc_mtit6twl_8fc8dc45_626,doc_mtit6twl_8fc8dc45_v1_chunk_522,doc_mtit6twl_8fc8dc45_736,doc_mti2fzwu_afe86c69_v1_chunk_8,doc_mtit6twl_8fc8dc45_739,doc_mtit6t3w_7276e219_v1_chunk_99,doc_mtit6twl_8fc8dc45_741,doc_mtit6twl_8fc8dc45_v1_chunk_2453,doc_mtit6twl_8fc8dc45_745,doc_mtit6tfa_b0040da4_v1_chunk_508,doc_mtit6twl_8fc8dc45_780,doc_mtit6twl_8fc8dc45_v1_chunk_2440 candidateDocumentIds=doc_mtit6twl_8fc8dc45,doc_mtit6t3w_7276e219,doc_mtjknjw8_9a8496f5,doc_mtjmq0n3_ad374f3c,doc_mti2fzwu_afe86c69,doc_mtit6tfa_b0040da4
+[RAG] finalEvidence=1 rejectedCandidates=24 selectedChunkIds=doc_mtit6twl_8fc8dc45_v1_chunk_523 selectedDocumentIds=doc_mtit6twl_8fc8dc45 relevanceScores=0.313
+[RAG] Using 1 chunks, ~234 estimated tokens
+[LLM] model=openai/gpt-oss-20b estimatedInputTokens=903 maxOutputTokens=800 attempt=1/2
+[LLM] Usage: promptTokens=801 completionTokens=800 totalTokens=1601
+[LLM] model=openai/gpt-oss-20b estimatedInputTokens=607 maxOutputTokens=800 attempt=1/2
+[LLM] Usage: promptTokens=566 completionTokens=800 totalTokens=1366
