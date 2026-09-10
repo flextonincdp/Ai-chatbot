@@ -31,14 +31,14 @@ async function main() {
     intent: 'CREATE', confidence: 0.9, newInformationRequired: false
   }).messageId, 'b');
 
-  const filtered = await selectRelevantChunks([
+  const { top: filtered } = await selectRelevantChunks([
     { id: 'hotel-1', docId: 'hotel', docName: 'hotel.csv', text: 'Hotel booking records include reservation dates, room types, guest counts, and booking status.' },
     { id: 'case-1', docId: 'case', docName: 'case.docx', text: 'AI RAG and Summary provide document search, access control, and related case studies.' },
     { id: 'python-1', docId: 'python', docName: 'python.pdf', text: 'Python functions, modules, and programming language syntax.' }
   ], 'Explain the hotel booking data');
   assert.deepStrictEqual(filtered.map(chunk => chunk.id), ['hotel-1']);
 
-  const sameTopic = await selectRelevantChunks([
+  const { top: sameTopic } = await selectRelevantChunks([
     { id: 'security-1', docId: 'policy', docName: 'security-policy.pdf', text: 'Security controls require multifactor authentication and role-based access.' },
     { id: 'security-2', docId: 'deployment', docName: 'deployment-guide.pdf', text: 'Deployment security uses role-based access and multifactor authentication.' },
     { id: 'unrelated-1', docId: 'finance', docName: 'annual-report.pdf', text: 'Annual revenue and financial performance are reported by year.' }

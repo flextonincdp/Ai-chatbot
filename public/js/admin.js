@@ -26,6 +26,11 @@ let config = { maxFileSize: 25 * 1024 * 1024, supportedExtensions: [], maxFilesP
 let selectedFiles = []; // files pending upload
 
 async function loadConfig() {
+  if (window.location.protocol === 'file:') {
+    document.getElementById('uploadHint').innerHTML = '<span style="color:red">Error: You must run the server (<code>npm start</code>) and open http://localhost:3000</span>';
+    return;
+  }
+
   try {
     const res = await fetch('/api/admin/config');
     if (res.ok) {
@@ -34,9 +39,12 @@ async function loadConfig() {
       document.getElementById('uploadHint').textContent = `Up to ${config.maxFilesPerUpload} files, ${config.maxFileSizeMB}MB each`;
       document.getElementById('formatList').textContent = `Supported: ${exts}`;
       document.getElementById('fileInput').accept = config.supportedExtensions.map(e => '.' + e).join(',');
+    } else {
+      document.getElementById('uploadHint').textContent = 'Server returned an error while loading config.';
     }
   } catch (e) {
     console.warn('Failed to load config', e);
+    document.getElementById('uploadHint').innerHTML = '<span style="color:red">Server unreachable. Is the Node server running?</span>';
   }
 }
 
@@ -326,11 +334,15 @@ processBtn.onclick = async () => {
     renderDocList(data.docs);
     
   } catch (e) {
+    let errorDetail = e.message;
+    if (e.message === 'Failed to fetch' || window.location.protocol === 'file:') {
+      errorDetail = 'Failed to connect to the server. Ensure you are running it (node server.js) and accessing it via http://localhost:3000.';
+    }
     uploadLog.innerHTML = `<div class="upload-log-item error">
       <div class="log-icon">✕</div>
       <div>
         <div class="log-filename">Upload Error</div>
-        <div class="log-detail">${escapeHtml(e.message)}</div>
+        <div class="log-detail">${escapeHtml(errorDetail)}</div>
       </div>
     </div>`;
   }

@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const { requireAdmin } = require('../middleware/auth');
-const { loadKB, saveKB, backupKB, findDuplicateByHash } = require('../lib/kbStore');
+const { loadKB, findDuplicateByHash } = require('../lib/kbStore');
 const { extractText } = require('../lib/extractText');
 const { chunkText } = require('../lib/chunk');
 const { getStorageProvider } = require('../lib/storage');
@@ -41,41 +41,43 @@ router.get('/config', (req, res) => {
   });
 });
 
-router.get('/kb', async (req, res) => {
-  const kb = loadKB();
-  const docs = kb.docs.map(d => migrateLegacyDoc(d));
-  
-  let dbStats = null;
-  const pool = getPool();
-  if (pool) {
-    try {
-      const docsCount = await query('SELECT count(*) FROM documents');
-      const chunksCount = await query('SELECT count(*) FROM chunks');
-      const embeddingsCount = await query('SELECT count(*) FROM embeddings');
-      const readyCount = await query(`SELECT count(*) FROM documents WHERE status = 'READY'`);
-      const pendingCount = await query(`SELECT count(*) FROM documents WHERE status = 'PENDING_EMBEDDING' OR status = 'EMBEDDING_NOT_CONFIGURED'`);
-      const failedCount = await query(`SELECT count(*) FROM documents WHERE status = 'FAILED'`);
+router.get('/kb', async (req, res, next) => {
+  try {
+    const kb = await loadKB();
+    const docs = kb.docs.map(d => migrateLegacyDoc(d));
+    
+    let dbStats = null;
+    const pool = getPool();
+    if (pool) {
+      try {
+        const docsCount = await query('SELECT count(*) FROM documents');
+        const chunksCount = await query('SELECT count(*) FROM chunks');
+        const embeddingsCount = await query('SELECT count(*) FROM embeddings');
+        const readyCount = await query(`SELECT count(*) FROM documents WHERE status = 'READY'`);
+        const pendingCount = await query(`SELECT count(*) FROM documents WHERE status = 'PENDING_EMBEDDING' OR status = 'EMBEDDING_NOT_CONFIGURED'`);
+        const failedCount = await query(`SELECT count(*) FROM documents WHERE status = 'FAILED'`);
 
-      dbStats = {
-        documents: parseInt(docsCount.rows[0].count, 10),
-        chunks: parseInt(chunksCount.rows[0].count, 10),
-        embeddings: parseInt(embeddingsCount.rows[0].count, 10),
-        ready: parseInt(readyCount.rows[0].count, 10),
-        pending: parseInt(pendingCount.rows[0].count, 10),
-        failed: parseInt(failedCount.rows[0].count, 10),
-      };
-    } catch(err) {
-      console.error('Failed to get DB stats:', err);
+        dbStats = {
+          documents: parseInt(docsCount.rows[0].count, 10),
+          chunks: parseInt(chunksCount.rows[0].count, 10),
+          embeddings: parseInt(embeddingsCount.rows[0].count, 10),
+          ready: parseInt(readyCount.rows[0].count, 10),
+          pending: parseInt(pendingCount.rows[0].count, 10),
+          failed: parseInt(failedCount.rows[0].count, 10),
+        };
+      } catch(err) {
+        console.error('Failed to get DB stats:', err);
+      }
     }
-  }
 
-  res.json({ docs, totalChunks: kb.chunks.length, dbStats });
+    res.json({ docs, totalChunks: kb.chunks.length, dbStats });
+  } catch (err) {
+    console.error('[Admin] Error loading KB:', err);
+    res.status(500).json({ error: 'Failed to load knowledge base' });
+  }
 });
 
 router.post('/upload', upload.array('files', MAX_FILES_PER_UPLOAD), async (req, res) => {
-  const kb = loadKB();
-  backupKB();
-
   const log = [];
   const defaultOrgId = 'org_default';
   const pool = getPool();
@@ -85,7 +87,12 @@ router.post('/upload', upload.array('files', MAX_FILES_PER_UPLOAD), async (req, 
   }
 
   // Ensure default org exists
-  await query(`INSERT INTO organizations (id, name) VALUES ($1, $2) ON CONFLICT DO NOTHING`, [defaultOrgId, 'Default Organization']);
+  try {
+    await query(`INSERT INTO organizations (id, name) VALUES ($1, $2) ON CONFLICT DO NOTHING`, [defaultOrgId, 'Default Organization']);
+  } catch (orgErr) {
+    console.error('[Admin] Failed to ensure default organization:', orgErr.message);
+    return res.status(500).json({ error: 'Database connection error. Please try again.' });
+  }
 
   for (const file of req.files || []) {
     const safeName = sanitizeFilename(file.originalname);
@@ -103,16 +110,18 @@ router.post('/upload', upload.array('files', MAX_FILES_PER_UPLOAD), async (req, 
     let hash = null;
     try { hash = computeFileHash(file.path); } catch {}
 
-    if (hash && findDuplicateByHash(kb, hash)) {
-      const existing = findDuplicateByHash(kb, hash);
-      log.push({
-        file: safeName,
-        status: 'duplicate',
-        reason: 'Document already exists',
-        existingDocument: { id: existing.id || existing.documentId, name: existing.name || existing.originalFilename }
-      });
-      fs.unlink(file.path, () => {});
-      continue;
+    if (hash) {
+      const existing = await findDuplicateByHash(hash, defaultOrgId);
+      if (existing) {
+        log.push({
+          file: safeName,
+          status: 'duplicate',
+          reason: 'Document already exists',
+          existingDocument: { id: existing.id, name: existing.name }
+        });
+        fs.unlink(file.path, () => {});
+        continue;
+      }
     }
 
     // ── Step 3: Build metadata & Queue ──
@@ -148,9 +157,6 @@ router.post('/upload', upload.array('files', MAX_FILES_PER_UPLOAD), async (req, 
       await jobQueue.enqueue(jobId, docMeta.id, defaultOrgId);
       
       await query('COMMIT');
-      
-      // Keep legacy store aligned with "QUEUED" state
-      kb.docs.push({ ...docMeta, status: dbStatus });
 
       log.push({
         file: safeName,
@@ -173,33 +179,33 @@ router.post('/upload', upload.array('files', MAX_FILES_PER_UPLOAD), async (req, 
     }
   }
 
-  saveKB(kb);
-  const docs = kb.docs.map(d => migrateLegacyDoc(d));
-  res.json({ success: true, log, docs, totalChunks: kb.chunks.length });
+  try {
+    const kb = await loadKB(defaultOrgId);
+    const docs = kb.docs.map(d => migrateLegacyDoc(d));
+    res.json({ success: true, log, docs, totalChunks: kb.chunks.length });
+  } catch (err) {
+    console.error('[Admin] Error reloading KB after upload:', err);
+    res.status(500).json({ error: 'Upload succeeded but failed to reload knowledge base.' });
+  }
 });
 
 router.delete('/kb/:id', async (req, res) => {
-  const kb = loadKB();
-  const docExists = kb.docs.some(d => (d.id || d.documentId) === req.params.id);
-  if (!docExists) return res.status(404).json({ error: 'Document not found' });
-
-  backupKB();
-  
   const pool = getPool();
-  if (pool) {
-    try {
-      await query('DELETE FROM documents WHERE id = $1', [req.params.id]);
-    } catch(err) {
-      console.error('Failed to delete from DB:', err);
-    }
+  if (!pool) return res.status(500).json({ error: 'DB not configured' });
+
+  try {
+    const docRes = await query('SELECT id FROM documents WHERE id = $1', [req.params.id]);
+    if (docRes.rowCount === 0) return res.status(404).json({ error: 'Document not found' });
+
+    await query('DELETE FROM documents WHERE id = $1', [req.params.id]);
+
+    const kb = await loadKB();
+    const docs = kb.docs.map(d => migrateLegacyDoc(d));
+    res.json({ success: true, docs, totalChunks: kb.chunks.length });
+  } catch(err) {
+    console.error('Failed to delete from DB:', err);
+    res.status(500).json({ error: 'Failed to delete document' });
   }
-
-  kb.docs = kb.docs.filter(d => (d.id || d.documentId) !== req.params.id);
-  kb.chunks = kb.chunks.filter(c => c.docId !== req.params.id);
-  saveKB(kb);
-
-  const docs = kb.docs.map(d => migrateLegacyDoc(d));
-  res.json({ success: true, docs, totalChunks: kb.chunks.length });
 });
 
 module.exports = router;

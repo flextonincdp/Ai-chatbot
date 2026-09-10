@@ -24,7 +24,7 @@ async function reindex() {
   console.log('==================================================\n');
 
   // 1. Initialize DB
-  initPool();
+  await initPool();
 
   // 2. Verify existing data is safe
   console.log('[Safety] Verifying existing data...');

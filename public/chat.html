@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Knowledge Studio — Chat</title>
   <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
     /* ============================================
        CHAT-FIRST PROFESSIONAL LAYOUT
@@ -25,6 +27,7 @@
       padding: 28px 16px 20px;
       display: flex;
       flex-direction: column;
+      align-items: center;
       gap: 24px;
       scroll-behavior: smooth;
     }
@@ -32,7 +35,7 @@
     .chat-history::-webkit-scrollbar-thumb { background: var(--line); border-radius: 10px; }
 
     /* Messages */
-    .message { display: flex; flex-direction: column; }
+    .message { display: flex; flex-direction: column; width: 100%; max-width: 800px; margin: 0 auto; }
     .message.user { align-items: flex-end; }
     .message.assistant { align-items: flex-start; }
 
@@ -319,7 +322,8 @@
     .chat-input-row {
       display: flex;
       width: 100%;
-      max-width: 1100px;
+      max-width: 800px;
+      margin: 0 auto;
       gap: 14px;
       align-items: center;
     }
@@ -329,9 +333,9 @@
       min-width: 0;
       height: 60px;
       min-height: 60px;
-      padding: 14px 18px;
+      padding: 14px 24px;
       font-size: 17px;
-      border-radius: var(--radius-lg);
+      border-radius: 30px;
       border: 1px solid var(--line);
       background: var(--paper);
     }
@@ -339,12 +343,21 @@
       border-color: var(--brass-bright);
       outline: none;
     }
-    .chat-input-row button {
+    .chat-input-row button.icon-btn {
       flex: 0 0 auto;
-      min-width: 100px;
-      height: 58px;
-      padding: 0 28px;
-      border-radius: var(--radius-lg);
+      min-width: 50px;
+      height: 50px;
+      padding: 0;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--ink);
+      color: white;
+      transition: opacity 0.2s;
+    }
+    .chat-input-row button.icon-btn:hover {
+      opacity: 0.8;
     }
     @media (max-width: 640px) {
       .chat-input-row {
@@ -382,13 +395,117 @@
       background: var(--line-soft);
       color: var(--text-primary);
     }
+    
+    /* 3-Column Layout Overrides */
+    .chat-container {
+      max-width: 100% !important;
+      border-right: 1px solid var(--line);
+    }
+    
+    .session-item {
+      position: relative;
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 13px;
+      color: var(--text-primary);
+      transition: background 0.15s;
+    }
+    .session-item:hover {
+      background: var(--paper);
+    }
+    .session-item.active {
+      background: var(--paper);
+      font-weight: 600;
+      border: 1px solid var(--line);
+    }
+    .session-item-date {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+    .session-item-main {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 0;
+    }
+    .session-item-title {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .session-pin { margin-right: 4px; font-size: 11px; }
+    .session-menu-btn {
+      display: inline-flex;
+      width: 25px;
+      height: 25px;
+      align-items: center;
+      justify-content: center;
+      border: 0;
+      border-radius: 6px;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 19px;
+      line-height: 1;
+      cursor: pointer;
+      opacity: 0;
+    }
+    .session-item:hover .session-menu-btn,
+    .session-item.active .session-menu-btn,
+    .session-menu-btn:focus { opacity: 1; }
+    .session-menu-btn:hover { background: var(--line-soft); color: var(--text-primary); }
+    .session-actions {
+      position: absolute;
+      z-index: 5;
+      top: 38px;
+      right: 8px;
+      min-width: 156px;
+      padding: 5px;
+      display: grid;
+      gap: 2px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow);
+    }
+    .session-actions[hidden] { display: none; }
+    .session-actions button {
+      width: 100%;
+      border: 0;
+      border-radius: 5px;
+      padding: 8px 9px;
+      background: transparent;
+      color: var(--text-primary);
+      text-align: left;
+      font: inherit;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .session-actions button:hover { background: var(--line-soft); }
+    .session-actions button.danger { color: var(--error); }
+    
+    .chart-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .chart-card h4 {
+      margin: 0 0 12px;
+      font-size: 14px;
+      color: var(--text-primary);
+    }
   </style>
 </head>
 <body>
 
-<div class="app" style="height: 100vh; overflow: hidden; display: flex; flex-direction: column; padding-bottom: 0;">
+<div class="app" style="height: 100vh; overflow: hidden; display: flex; flex-direction: column; padding: 0; max-width: 100%;">
   <!-- Top Header -->
-  <header class="top" style="flex-shrink: 0; margin-bottom: 0;">
+  <header class="top" style="flex-shrink: 0; margin-bottom: 0; border-bottom: 1px solid var(--line); padding-left: var(--space-lg); padding-right: var(--space-lg);">
     <div class="brandmark">
       <div class="mark">KS</div>
       <div class="name">Knowledge Studio</div>
@@ -399,27 +516,45 @@
     </div>
   </header>
 
-  <!-- Chat Area -->
-  <div class="chat-container">
-    <div class="chat-history" id="chatHistory">
-    <!-- Welcome Screen -->
-      <div class="message assistant" id="welcomeMessage">
-        <div class="bubble-content welcome-content">
-          <div class="welcome-logo">KS</div>
-          <div class="welcome-title">Knowledge Studio</div>
-          <div class="welcome-desc">Your organization's knowledge, ready to explore.</div>
+  <div class="main-layout" style="display: flex; flex: 1; overflow: hidden;">
+    <!-- Left Sidebar: Sessions -->
+    <aside class="sidebar-left" style="width: 260px; border-right: 1px solid var(--line); display: flex; flex-direction: column; background: var(--panel); flex-shrink: 0;">
+       <div style="padding: 16px;">
+         <button class="primary" id="newSessionBtn" style="width: 100%; justify-content: center;">+ New Chat</button>
+       </div>
+       <div id="sessionList" style="flex: 1; overflow-y: auto; padding: 0 16px 16px; display: flex; flex-direction: column; gap: 8px;">
+         <!-- Session items go here -->
+       </div>
+    </aside>
+
+    <!-- Center: Chat Area -->
+    <div class="chat-container" style="flex: 1; display: flex; flex-direction: column;">
+      <div class="chat-history" id="chatHistory">
+      <!-- Welcome Screen -->
+        <div class="message assistant" id="welcomeMessage">
+          <div class="bubble-content welcome-content">
+            <div class="welcome-logo">KS</div>
+            <div class="welcome-title">Knowledge Studio</div>
+            <div class="welcome-desc">Your organization's knowledge, ready to explore.</div>
+          </div>
         </div>
+      </div>
+
+      <!-- Input Area -->
+      <div class="chat-input-container">
+        <div class="chat-input-row">
+          <input type="text" id="queryInput" placeholder="Ask anything about your organization's knowledge..." autocomplete="off">
+          <button class="primary icon-btn" id="askBtn" aria-label="Send">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 19V5M5 12l7-7 7 7"/>
+            </svg>
+          </button>
+        </div>
+        <div id="askStatus" class="progress" style="margin: 6px auto 0; min-height: 14px; max-width: 800px;"></div>
       </div>
     </div>
 
-    <!-- Input Area -->
-    <div class="chat-input-container">
-      <div class="chat-input-row">
-        <input type="text" id="queryInput" placeholder="Ask anything about your organization's knowledge..." autocomplete="off">
-        <button class="primary" id="askBtn">Send</button>
-      </div>
-      <div id="askStatus" class="progress" style="margin: 6px 0 0; min-height: 14px;"></div>
-    </div>
+
   </div>
 </div>
 
