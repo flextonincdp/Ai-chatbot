@@ -115,7 +115,7 @@ async function runFull200PageOcr() {
   }
 
   // Update kb.json
-  const kb = loadKB();
+  const kb = await loadKB();
   const docObj = kb.docs.find(d => (d.id || d.documentId) === docId);
   if (docObj) {
     docObj.status = 'READY';

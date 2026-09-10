@@ -192,7 +192,7 @@ async function testSVG() {
 
         // ── Test 7: Hybrid retrieval ──
         console.log('[7] SVG Hybrid Retrieval');
-        const kb = loadKB();
+        const kb = await loadKB();
         const top = await retrieveTopChunks(kb, 'What departments report to the CEO?', 5);
         const svgSource = top.some(c => c.docName === 'organization_chart.svg');
         console.log(`    Retrieved ${top.length} chunks`);

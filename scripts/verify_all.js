@@ -8,14 +8,24 @@ const path = require('path');
 const crypto = require('crypto');
 
 async function run() {
-  const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+  const host = process.env.POSTGRES_HOST || 'localhost';
+  const port = process.env.PGPORT || process.env.POSTGRES_PORT || '5432';
+  const dbName = process.env.POSTGRES_DB || 'knowledge_studio';
+  const user = process.env.POSTGRES_USER || 'postgres';
+  const password = process.env.POSTGRES_PASSWORD || 'password';
   
+  let connectionString = process.env.DATABASE_URL;
+  if (!connectionString || connectionString.includes('${')) {
+    connectionString = `postgresql://${user}:${password}@${host}:${port}/${dbName}`;
+  }
+
+  const pool = new Pool({ connectionString });
   console.log('==================================================');
   console.log('1. POSTGRESQL');
   console.log('==================================================');
   try {
     await pool.query('SELECT 1');
-    console.log('PASS: Connected to PostgreSQL successfully at', process.env.DATABASE_URL);
+    console.log('PASS: Connected to PostgreSQL successfully at', connectionString);
   } catch (err) {
     console.log('FAIL: PostgreSQL connection failed.', err.message);
   }

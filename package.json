@@ -5,10 +5,14 @@
   "main": "server.js",
   "type": "commonjs",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node server.js",
+    "start": "node scripts/start.js",
+    "dev": "node scripts/start.js",
     "migrate": "node scripts/migrate.js",
+    "db:migrate": "node scripts/db/migrate_schema.js",
+    "db:test": "node scripts/db-test.js",
+    "db:migrate-data": "node scripts/migrate-kb-to-postgres.js",
     "test:embeddings": "node scripts/test_embeddings.js",
+    "test:pdf-format": "node scripts/test_pdf_formatting.js",
     "embeddings:reindex": "node scripts/reindex_embeddings.js"
   },
   "engines": {
@@ -36,6 +40,7 @@
     "pg": "^8.23.0",
     "pptxgenjs": "^3.12.0",
     "tesseract.js": "^7.0.0",
+    "turndown": "^7.2.4",
     "xlsx": "^0.18.5"
   }
 }

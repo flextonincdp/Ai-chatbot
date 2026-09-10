@@ -1,6 +1,8 @@
+require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
 const { Pool } = require('pg');
+const { localDatabaseConfig } = require('../lib/db');
 
 async function testUpload() {
   const testFileName = 'test_upload_' + Date.now() + '.txt';
@@ -34,7 +36,7 @@ async function testUpload() {
     console.log('Upload Data:', JSON.stringify(uploadData, null, 2));
     const docMeta = uploadData.log[0].document;
 
-    const pool = new Pool({ connectionString: 'postgresql://postgres:password@127.0.0.1:5440/knowledge_studio' });
+    const pool = new Pool(localDatabaseConfig());
     const dbDoc = await pool.query('SELECT * FROM documents WHERE id = $1', [docMeta.documentId]);
     
     if (dbDoc.rowCount > 0) {

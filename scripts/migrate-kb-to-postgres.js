@@ -1,7 +1,7 @@
 require('dotenv').config();
+const fs = require('fs');
+const path = require('path');
 const { initPool, query, closePool } = require('../lib/db');
-const { getEmbeddingProvider } = require('../lib/embeddings');
-const { loadKB } = require('../lib/kbStore');
 const crypto = require('crypto');
 
 function computeHash(content) {
@@ -10,13 +10,28 @@ function computeHash(content) {
 
 async function migrate() {
   await initPool();
-  const provider = getEmbeddingProvider();
   
-  console.log('[Migrate] Loading existing kb.json...');
-  const kb = await loadKB();
+  const kbPath = path.join(__dirname, '..', 'data', 'kb.json');
+  console.log('[Migrate] Loading existing kb.json from:', kbPath);
+  
+  if (!fs.existsSync(kbPath)) {
+    console.log('[Migrate] No kb.json found. Nothing to migrate.');
+    await closePool();
+    return;
+  }
+
+  let kb;
+  try {
+    const data = fs.readFileSync(kbPath, 'utf8');
+    kb = JSON.parse(data);
+  } catch (err) {
+    console.error('[Migrate] Failed to parse kb.json:', err.message);
+    await closePool();
+    return;
+  }
   
   if (!kb || !kb.docs || kb.docs.length === 0) {
-    console.log('[Migrate] No documents to migrate.');
+    console.log('[Migrate] kb.json is empty. No documents to migrate.');
     await closePool();
     return;
   }
@@ -31,13 +46,7 @@ async function migrate() {
   
   let totalDocs = 0;
   let totalChunks = 0;
-  let totalEmbeddings = 0;
   
-  const isEmbeddingsConfigured = provider.isConfigured();
-  if (!isEmbeddingsConfigured) {
-    console.log('[Migrate] Embedding provider NOT CONFIGURED. Migrating docs and chunks without embeddings.');
-  }
-
   for (const doc of kb.docs) {
     const docId = doc.id || doc.documentId;
     
@@ -95,14 +104,6 @@ async function migrate() {
         ON CONFLICT (id) DO NOTHING
       `, [chunkId, versionId, i, chunk.text, contentHash]);
       totalChunks++;
-
-      // We won't generate embeddings here if not configured.
-      // If configured, we would batch embed them. But per instructions, if we run without key:
-      // DO NOT call embedding API. 
-      // DO NOT insert fake vectors.
-      if (isEmbeddingsConfigured) {
-         // Later implementation: query provider, then insert vector
-      }
     }
   }
 
